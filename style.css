@@ -154,13 +154,13 @@
     
     padding-top: 106px;
     padding-bottom: 82px;
+    gap: 4px;
 
     overflow-y: scroll;
 }
 
 .messages {
-    gap: 4px;
-    /* overflow-y: scroll; */
+    /* gap: 4px; */
 }
 
 .status {

@@ -1,5 +1,12 @@
 const userName = {name: ''};
 
+const message = {
+	from: '',
+	to: '',
+	text: '',
+	type: ''
+}
+
 const messages = document.querySelector('.messages');
 
 let setIntervalId;
@@ -30,7 +37,7 @@ function loginFail() {
 }
 
 function statusCheck() {
-    const promise = axios.post('https://mock-api.driven.com.br/api/v4/uol/status', userName);
+    axios.post('https://mock-api.driven.com.br/api/v4/uol/status', userName);
 }
 
 function chatRefresher() {
@@ -54,4 +61,15 @@ function chatBuilder(element) {
     } else if(element.type === 'private_message') {
         messages.innerHTML += `<li class="${element.type}"> <span class="time">${element.time}</span> <span class="from">${element.from}</span> reservadamente para <span class="to">${element.to}</span>: ${element.text}`
     }
+}
+
+function sendMessage() {
+    message.from = userName.name;
+    message.text = document.querySelector('.text-message').value;
+    message.to = 'Todos';
+    message.type = 'message';
+
+    axios.post('https://mock-api.driven.com.br/api/v4/uol/messages', message)
+
+    document.querySelector('.text-message').value = '';
 }
