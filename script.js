@@ -1,6 +1,9 @@
 const userName = {name: ''};
 
+const messages = document.querySelector('.messages');
+
 let setIntervalId;
+
 
 function login() {
     userName.name = document.querySelector('.login-input').value;
@@ -17,6 +20,7 @@ function loginSuccess() {
     const loginScreen = document.querySelector('.login-screen');
     loginScreen.classList.add('invisible');
     setIntervalId = setInterval(statusCheck, 5000);
+    setInterval(chatRefresher, 3000);
 }
 
 function loginFail() {
@@ -27,4 +31,27 @@ function loginFail() {
 
 function statusCheck() {
     const promise = axios.post('https://mock-api.driven.com.br/api/v4/uol/status', userName);
+}
+
+function chatRefresher() {
+    const promise = axios.get('https://mock-api.driven.com.br/api/v4/uol/messages');
+    
+    promise.then(chatMessages);
+    // promise.catch(disconect);
+}
+
+function chatMessages(response) {
+    messages.innerHTML = '';
+    const allMessages = response.data;
+    allMessages.map(chatBuilder);
+}
+
+function chatBuilder(element) {
+    if(element.type === 'status') {
+        messages.innerHTML += `<li class="${element.type}"> <span class="time">${element.time}</span> <span class="from">${element.from}</span> ${element.text}</li>`
+    } else if(element.type === 'message') {
+        messages.innerHTML += `<li class="${element.type}"> <span class="time">${element.time}</span> <span class="from">${element.from}</span> para <span class="to">${element.to}</span>: ${element.text}</li>`
+    } else if(element.type === 'private_message') {
+        messages.innerHTML += `<li class="${element.type}"> <span class="time">${element.time}</span> <span class="from">${element.from}</span> reservadamente para <span class="to">${element.to}</span>: ${element.text}`
+    }
 }
